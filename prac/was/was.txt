@@ -1,0 +1,183 @@
+Experiment 1: SQL injection 
+
+from flask import Flask, request
+import mysql.connector
+# Initialize the Flask application
+app = Flask(__name__)
+# Connect to the MySQL database
+try:
+ conn = mysql.connector.connect(
+ host="localhost",
+ database="mydatabase",
+ user="mydatabaseuser",
+ password="mypassword"
+ )
+except mysql.connector.Error as err:
+ print("Unable to connect to the database:", err)
+# Create a cursor for executing database queries
+cursor = conn.cursor()
+# Define the route for displaying the user's profile
+@app.route('/profile')
+def profile():
+ # Get the user ID from the query string
+ user_id = request.args.get('user_id')
+ # Check that the user ID is a number
+ if not user_id.isdigit():
+ return "Invalid user ID"
+ # Use parameterized queries to execute the database query
+ try:
+ cursor.execute("SELECT * FROM users WHERE id=%s", (user_id,))
+ except mysql.connector.Error as err:
+ return "Unable to execute the database query:", err
+ # Fetch the result of the database query
+ result = cursor.fetchone()
+ # Check if the result is None, which means that no user was found with
+the given ID
+ if result is None:
+ return "User not found"
+ # Return the result as a string
+ return str(result)
+# Start the Flask application
+if __name__ == '__main__':
+ app.run()
+
+
+Experiment 2:  XSS attack
+
+from flask import Flask, request
+app = Flask(__name__)
+@app. route ("/")
+def index ():
+ name = request.args.get ("name", "")
+ return f"""
+ <html>
+ <head>
+ <title>XSS Example</title>
+ </head>
+ <body>
+ <h1>Hello, {escape_html(name)}! </h1>
+ <form action="/" method="GET">
+ <label for="name">Enter your name:</label>
+ <input type="text" id="name" name="name"
+value="{escape_html(name)}">
+ <input type="submit" value="Submit">
+ </form>
+ </body>
+ </html>
+ """
+def escape_html(s):
+
+ return s. replace ("&", "&amp;"). replace ("<", "&lt;"). replace (">", "&gt;").
+replace ('"', "&quot;"). replace ("'", "&#39;")
+if __name__ == "__main__":
+ app.run ()
+
+
+Experiment 3: t Server-Side Request Forgery (SSRF)
+
+
+from flask import Flask, request
+import re
+app = Flask(__name__)
+# This function is used to render the main page of the website
+@app.route("/")
+def index():
+ # Get the URL that was entered by the user
+ url = request.args.get("url", "")
+ # Create the HTML response that will be sent back to the user
+ html_response = f"""
+ <html>
+ <head>
+ <title>SSRF Example</title>
+ </head>
+ <body>
+ <h1>Fetching data from: {escape_html(url)}</h1>
+ {fetch_data(url) if is_valid_url(url) else "Invalid URL"}
+ <form action="/" method="GET">
+ <label for="url">Enter a URL:</label>
+ <input type="text" id="url" name="url" value="{escape_html(url)}">
+ <input type="submit" value="Submit">
+ </form>
+ </body>
+ </html>
+ """
+ # Return the HTML response to the user
+ return html_response
+# This function is used to escape special characters in the given string
+def escape_html(s):
+ """
+ Escapes special characters in the given string so that they can be safely included in HTML.
+ """
+ s = s.replace("&", "&amp;")
+ s = s.replace("<", "&lt;")
+ s = s.replace(">", "&gt;")
+ s = s.replace('"', "&quot;")
+ s = s.replace("'", "&#39;")
+ return s
+# This function is used to check if the given URL is valid
+def is_valid_url(url):
+ """
+ Returns True if the given URL is valid and False otherwise.
+ """
+ # Use a regular expression to check if the URL starts with either 'http://' or 'https://' and
+contains a domain name
+ url_regex = re.compile(r"^https?://[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$")
+ if url_regex.match(url) is not None:
+ return True
+ else:
+ return False
+# This function is used to fetch data from the given URL
+def fetch_data(url):
+ """
+ Fetches data from the given URL and returns it as a string.
+ """
+ # Add code to fetch data from the URL here
+ # ...
+ return "Data fetched from URL"
+# Start the Flask application
+if __name__ == "__main__":
+ app.run()
+
+
+Experiment 4: Android KeyStore
+
+
+public class MainActivity extends AppCompatActivity {
+ @Override
+ protected void onCreate(Bundle savedInstanceState) {
+ super.onCreate(savedInstanceState);
+ setContentView(R.layout.activity_main);
+ Button button = findViewById(R.id.button);
+ button.setOnClickListener(new View.OnClickListener() {
+ @Override
+ public void onClick(View view) {
+ Toast.makeText(getApplicationContext(), "Hello, world!",
+Toast.LENGTH_SHORT).show();
+ }
+ });
+ }
+}
+
+
+Experiment 5: Scanning a website for vulnerabilities
+
+
+import requests
+# Define the target website URL
+url = "https://www.example.com/"
+# Send a GET request to the target website
+response = requests.get(url)
+# Check for SQL injection vulnerabilities
+if "sql syntax" in response.text.lower():
+ print("[!] SQL injection vulnerability detected on the target website!")
+else:
+ print("No SQL injection vulnerability detected.")
+# Check for XSS vulnerabilities
+if "<script>" in response.text.lower():
+ print("[!] Cross-site scripting (XSS) vulnerability detected on the
+target website!")
+else:
+ print("No Cross-site scripting (XSS) vulnerability detected.")
+
+
+Experiment 6: 

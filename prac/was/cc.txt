@@ -1,0 +1,229 @@
+1. Identify comment or not
+public class CommentChecker {
+    public static boolean isComment(String line) {
+        // Check if line starts with "//" or "/*" and ends with "*/"
+        return line.trim().startsWith("//") || line.trim().startsWith("/*") && line.trim().endsWith("*/");
+    }
+
+    public static void main(String[] args) {
+        // Test cases
+        String line1 = "// This is a comment";
+        String line2 = "/* This is also a comment */";
+        String line3 = "This is not a comment";
+        
+        System.out.println("Line 1 is a comment: " + isComment(line1));
+        System.out.println("Line 2 is a comment: " + isComment(line2));
+        System.out.println("Line 3 is a comment: " + isComment(line3));
+    }
+}
+
+
+2. Valid Identifier
+
+
+
+public class IdentifierValidator {
+    public static boolean isValidIdentifier(String identifier) {
+        // Check if the identifier is not empty
+        if (identifier.isEmpty()) {
+            return false;
+        }
+        
+        // Check if the identifier starts with a letter or underscore
+        char firstChar = identifier.charAt(0);
+        if (!(Character.isLetter(firstChar) || firstChar == '_')) {
+            return false;
+        }
+        
+        // Check the rest of the characters
+        for (int i = 1; i < identifier.length(); i++) {
+            char currentChar = identifier.charAt(i);
+            // Check if the character is a letter, digit, or underscore
+            if (!(Character.isLetterOrDigit(currentChar) || currentChar == '_')) {
+                return false;
+            }
+        }
+        
+        // If all conditions passed, identifier is valid
+        return true;
+    }
+
+    public static void main(String[] args) {
+        // Test cases
+        String identifier1 = "variable_name";
+        String identifier2 = "123invalid";
+        String identifier3 = "_validIdentifier";
+        
+        System.out.println(identifier1 + " is a valid identifier: " + isValidIdentifier(identifier1));
+        System.out.println(identifier2 + " is a valid identifier: " + isValidIdentifier(identifier2));
+        System.out.println(identifier3 + " is a valid identifier: " + isValidIdentifier(identifier3));
+    }
+}
+
+
+3. validate Lexical analyzer
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
+public class LexicalAnalyzer {
+    // Set of valid operators
+    private static final Set<String> operators = new HashSet<>(Arrays.asList(
+            "+", "-", "*", "/", "=", "==", "!=", "<", ">", "<=", ">="
+    ));
+
+    public static boolean isValidOperator(String operator) {
+        return operators.contains(operator);
+    }
+
+    public static void main(String[] args) {
+        // Test cases
+        String operator1 = "+";
+        String operator2 = "-";
+        String operator3 = "*";
+        String operator4 = "/";
+        String operator5 = "=";
+        String operator6 = "==";
+        String operator7 = "!=";
+        String operator8 = "<";
+        String operator9 = ">";
+        String operator10 = "<=";
+        String operator11 = ">=";
+        String operator12 = "**"; // Invalid operator
+        
+        System.out.println(operator1 + " is a valid operator: " + isValidOperator(operator1));
+        System.out.println(operator2 + " is a valid operator: " + isValidOperator(operator2));
+        System.out.println(operator3 + " is a valid operator: " + isValidOperator(operator3));
+        System.out.println(operator4 + " is a valid operator: " + isValidOperator(operator4));
+        System.out.println(operator5 + " is a valid operator: " + isValidOperator(operator5));
+        System.out.println(operator6 + " is a valid operator: " + isValidOperator(operator6));
+        System.out.println(operator7 + " is a valid operator: " + isValidOperator(operator7));
+        System.out.println(operator8 + " is a valid operator: " + isValidOperator(operator8));
+        System.out.println(operator9 + " is a valid operator: " + isValidOperator(operator9));
+        System.out.println(operator10 + " is a valid operator: " + isValidOperator(operator10));
+        System.out.println(operator11 + " is a valid operator: " + isValidOperator(operator11));
+        System.out.println(operator12 + " is a valid operator: " + isValidOperator(operator12));
+    }
+}
+
+
+4. blank spaces and new line
+
+public class BlankSpaceAndNewLineCounter {
+    public static void main(String[] args) {
+        String input = "This is a sample\nmultiline\nstring with several spaces and\nnew lines.";
+
+        int blankSpaceCount = 0;
+        int newLineCount = 0;
+
+        for (char ch : input.toCharArray()) {
+            if (ch == ' ') {
+                blankSpaceCount++;
+            } else if (ch == '\n') {
+                newLineCount++;
+            }
+        }
+
+        System.out.println("Number of blank spaces: " + blankSpaceCount);
+        System.out.println("Number of new lines: " + newLineCount);
+    }
+}
+
+5. Pattern
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+public class StringRecognizer {
+    public static void main(String[] args) {
+        // Sample strings
+        String[] strings = {"a", "aa", "aab", "ab", "abb", "abbb"};
+
+        // Patterns
+        String pattern1 = "a*";
+        String pattern2 = "a*b+";
+        String pattern3 = "abb";
+
+        // Compile the patterns
+        Pattern p1 = Pattern.compile(pattern1);
+        Pattern p2 = Pattern.compile(pattern2);
+        Pattern p3 = Pattern.compile(pattern3);
+
+        // Match strings against patterns
+        for (String s : strings) {
+            Matcher m1 = p1.matcher(s);
+            Matcher m2 = p2.matcher(s);
+            Matcher m3 = p3.matcher(s);
+
+            System.out.println("String: " + s);
+            System.out.println("Matches a*: " + m1.matches());
+            System.out.println("Matches a*b+: " + m2.matches());
+            System.out.println("Matches abb: " + m3.matches());
+            System.out.println();
+        }
+    }
+}
+
+6. Recursive Parser
+
+import java.util.Scanner;
+
+public class RecursiveDescentParser {
+    private static int index;
+    private static String input;
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        System.out.print("Enter an arithmetic expression: ");
+        input = scanner.nextLine();
+
+        index = 0;
+        boolean isValid = parseExpression();
+
+        if (isValid && index == input.length()) {
+            System.out.println("Valid expression!");
+        } else {
+            System.out.println("Invalid expression!");
+        }
+    }
+
+    private static boolean parseExpression() {
+        return parseTerm() && parseExpressionPrime();
+    }
+
+    private static boolean parseExpressionPrime() {
+        if (index < input.length() && (input.charAt(index) == '+' || input.charAt(index) == '-')) {
+            index++;
+            return parseTerm() && parseExpressionPrime();
+        }
+        return true;
+    }
+
+    private static boolean parseTerm() {
+        return parseFactor() && parseTermPrime();
+    }
+
+    private static boolean parseTermPrime() {
+        if (index < input.length() && (input.charAt(index) == '*' || input.charAt(index) == '/')) {
+            index++;
+            return parseFactor() && parseTermPrime();
+        }
+        return true;
+    }
+
+    private static boolean parseFactor() {
+        if (index < input.length() && Character.isDigit(input.charAt(index))) {
+            index++;
+            return true;
+        } else if (index < input.length() && input.charAt(index) == '(') {
+            index++;
+            boolean isValid = parseExpression();
+            if (index < input.length() && input.charAt(index) == ')') {
+                index++;
+                return isValid;
+            }
+            return false;
+        }
+        return false;
+    }
+}

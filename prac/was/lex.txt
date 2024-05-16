@@ -1,0 +1,152 @@
+// PROGRAM 6
+// OBJECTIVE:
+// Write a LEX code to count total number of tokens
+// PROGRAM:
+
+
+%{
+int n = 0 ;
+%}
+
+// rule section
+%%
+//count number of keywords
+"while" | "if" | "else" {	n++;
+printf("\t keywords : %s", yytext);}
+// count number of keywords
+"int" | "float" {	n++;
+printf("\t keywords : %s", yytext);}
+// count number of identifiers
+[a-zA-Z_] [a-zA-Z0-9_]* {	n++;
+printf("\t identifier : %s", yytext);}
+// count number of operators
+"<=" | "==" | "=" | "++" | "-" | "*" | "+" {	n++;
+printf("\t operator : %s", yytext);}
+// count number of separators
+[ () {} | , ; ] {	n++;
+printf("\t separator : %s", yytext);}
+// count number of floats
+[0-9]* "." [0-9]+ {	n++;
+printf("\t float : %s", yytext);}
+// count number of integers
+[0-9]+ {n++;
+printf("\t integer : %s", yytext);}
+. ;
+%%
+int main()
+{
+yylex();
+printf("\n total no. of token = %d\n", n);
+}
+
+
+// PROGRAM 7
+// OBJECTIVE:
+// Write a LEX code to check if characters other than alphabets occur in a string
+// PROGRAM:
+
+
+%{
+int len=0;
+%}
+
+// Rules to identify if a character apart from alphabets occurs in a string
+%%
+[a-zA-Z]+ {	printf("No character other than alphabets");}
+
+/* here . will match any other character than alphabets because alphabets are already matched above will matches 0 or more characters in front of it. */
+
+.* {	printf("character other than alphabets present");	}
+%%
+
+// code section int yywrap() { }
+
+int main()
+{
+yylex(); return 0;
+}
+
+
+
+// PROGRAM 8
+// OBJECTIVE:
+// Write a Lex code to count words that are less than 10 and greater than 5.
+// PROGRAM:
+
+
+%{
+int len=0, counter=0;
+%}
+
+%%
+[a-zA-Z]+ {	len=strlen(yytext);
+if(len<10 && len>5)
+{counter++;} }
+%%
+
+int yywrap (void )
+{
+return 1;
+}
+
+int main()
+{
+printf("Enter the string:"); yylex();
+printf("\n %d", counter); return 0;
+}
+
+
+
+// PROGRAM 9
+// OBJECTIVE:
+// Write a Lex code to check valid Mobile Number
+// PROGRAM:
+
+%{
+/* Definition section */
+%}
+
+/* Rule Section */
+%%
+[1-9] [0-9] {9} { printf("\nMobile Number Valid\n"); }
+
+.+ {	printf("\nMobile Number Invalid\n");	}
+%%
+
+// driver code int main()
+{
+printf("\nEnter Mobile Number : "); yylex();
+printf("\n"); return 0;
+}
+
+
+
+
+// PROGRAM 10
+// OBJECTIVE:
+// Write a Lex code to identify and count positive and negative numbers
+// PROGRAM:
+
+
+%{
+int positive_no = 0, negative_no = 0;
+%}
+
+/* Rules for identifying and counting positive and negative numbers*/
+%%
+^ [-] [0-9] + {	negative_no++;
+printf("negative number = %s\n", yytext);} // negative number
+
+[0-9] + {	positive_no++;
+printf("positive number = %s\n", yytext);} // positive number
+%%
+
+/*** use code section ***/ int yywrap(){}
+
+int main()
+{
+yylex();
+printf ("number of positive numbers = %d, \n number of negative numbers = %d\n", positive_no, negative_no);
+
+return 0;
+}
